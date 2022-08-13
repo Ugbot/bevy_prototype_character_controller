@@ -1,4 +1,4 @@
-use bevy::{input::system::exit_on_esc_system, prelude::*};
+use bevy::{input::*, prelude::*};
 use bevy_prototype_character_controller::{
     controller::{
         BodyTag, CameraTag, CharacterController, CharacterControllerPlugin, HeadTag, Mass, YawTag,
@@ -28,16 +28,17 @@ impl Default for CharacterSettings {
     }
 }
 
+#[derive(Debug, Component)]
 pub struct FakeKinematicRigidBody;
 
-pub fn build_app(app: &mut AppBuilder) {
+pub fn build_app(app: &mut App) {
     app.insert_resource(ClearColor(Color::hex("101010").unwrap()))
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_plugin(CharacterControllerPlugin)
-        .add_system(exit_on_esc_system.system())
-        .add_startup_system(spawn_world.system())
-        .add_startup_system(spawn_character.system());
+        // .add_system(exit_on_esc_system.system())
+        .add_startup_system(spawn_world)
+        .add_startup_system(spawn_character);
 }
 
 pub fn spawn_world(
@@ -48,7 +49,7 @@ pub fn spawn_world(
     let cube = meshes.add(Mesh::from(shape::Cube { size: 1.0 }));
 
     // Light
-    commands.spawn_bundle(LightBundle {
+    commands.spawn_bundle(PointLightBundle {
         transform: Transform::from_translation(Vec3::new(-15.0, 10.0, -15.0)),
         ..Default::default()
     });
@@ -132,6 +133,7 @@ pub fn spawn_character(
             HeadTag,
         ))
         .id();
+        
     let head_model = commands
         .spawn_bundle(PbrBundle {
             material: red,
@@ -140,9 +142,10 @@ pub fn spawn_character(
             ..Default::default()
         })
         .id();
+
     let camera = commands
-        .spawn_bundle(PerspectiveCameraBundle {
-            transform: Transform::from_matrix(Mat4::face_toward(
+        .spawn_bundle(Camera3dBundle {
+            transform: Transform::from_matrix(Mat4::look_at_rh(
                 character_settings.follow_offset,
                 character_settings.focal_point,
                 Vec3::Y,

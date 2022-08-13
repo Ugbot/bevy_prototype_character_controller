@@ -1,17 +1,19 @@
-use bevy::{input::system::exit_on_esc_system, prelude::*};
+use bevy::{prelude::*};
 use bevy_prototype_character_controller::{
     controller::{BodyTag, CameraTag, CharacterController, HeadTag, YawTag},
     look::{LookDirection, LookEntity},
     rapier::*,
 };
-use bevy_rapier3d::{
-    physics::TimestepMode,
-    prelude::{
-        ColliderBundle, ColliderMassProps, ColliderShape, NoUserData, RapierConfiguration,
-        RapierPhysicsPlugin, RigidBodyActivation, RigidBodyBundle, RigidBodyMassPropsFlags,
-        RigidBodyPosition, RigidBodyPositionSync, RigidBodyType,
-    },
-};
+// use bevy_rapier3d::{
+//     physics::TimestepMode,
+//     prelude::{
+//         ColliderBundle, ColliderMassProps, ColliderShape, NoUserData, RapierConfiguration,
+//         RapierPhysicsPlugin, RigidBodyActivation, RigidBodyBundle, RigidBodyMassPropsFlags,
+//         RigidBodyPosition, RigidBodyPositionSync, RigidBodyType,
+//     },
+// }; 
+use bevy_rapier3d::prelude::*;
+
 use clap::{arg_enum, value_t};
 use rand::Rng;
 
@@ -40,7 +42,7 @@ fn main() {
     let controller_type =
         value_t!(matches.value_of("type"), ControllerType).unwrap_or(ControllerType::DynamicForce);
 
-    let mut app = App::build();
+    let mut app = App::new();
 
     // Generic
     app.insert_resource(ClearColor(Color::hex("101010").unwrap()))
@@ -67,8 +69,8 @@ fn main() {
 
     // Specific to this demo
     app.init_resource::<CharacterSettings>()
-        .add_startup_system(spawn_world.system())
-        .add_startup_system(spawn_character.system())
+        .add_startup_system(spawn_world)
+        .add_startup_system(spawn_character)
         .run();
 }
 
@@ -225,6 +227,7 @@ pub fn spawn_character(
             HeadTag,
         ))
         .id();
+        
     let head_model = commands
         .spawn_bundle(PbrBundle {
             material: red,
@@ -234,8 +237,8 @@ pub fn spawn_character(
         })
         .id();
     let camera = commands
-        .spawn_bundle(PerspectiveCameraBundle {
-            transform: Transform::from_matrix(Mat4::face_toward(
+        .spawn_bundle(Camera3dBundle {
+            transform: Transform::from_matrix(Mat4::look_at_rh(
                 character_settings.follow_offset,
                 character_settings.focal_point,
                 Vec3::Y,

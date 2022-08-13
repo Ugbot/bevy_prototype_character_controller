@@ -275,8 +275,8 @@ fn spawn_body_children(
         })
         .id();
     let camera = commands
-        .spawn_bundle(PerspectiveCameraBundle {
-            transform: Transform::from_matrix(Mat4::face_toward(
+        .spawn_bundle(Camera3dBundle {
+            transform: Transform::from_matrix(Mat4::look_at_rh(
                 character_settings.follow_offset,
                 character_settings.focal_point,
                 Vec3::Y,

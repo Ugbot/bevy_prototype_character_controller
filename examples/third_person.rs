@@ -7,11 +7,12 @@ mod utils;
 use utils::{build_app, controller_to_kinematic, CharacterSettings};
 
 fn main() {
-    let mut app = App::build();
+    let mut app = App::new();
     build_app(&mut app);
+ 
     app.init_resource::<CharacterSettings>()
-        .add_system(controller_to_kinematic.system())
-        .add_system(controller_to_yaw.system())
-        .add_system(controller_to_pitch.system())
+        .add_system(controller_to_kinematic)
+        .add_system(controller_to_yaw)
+        .add_system(controller_to_pitch)
         .run();
 }

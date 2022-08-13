@@ -5,7 +5,7 @@ use bevy_prototype_physx::*;
 pub struct PhysXKinematicTranslationCharacterControllerPlugin;
 
 impl Plugin for PhysXKinematicTranslationCharacterControllerPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_system(create_mass.system())
             .add_system(constrain_rotation.system())
             .add_system_to_stage(CoreStage::PreUpdate, body_to_velocity.system())
@@ -17,7 +17,7 @@ impl Plugin for PhysXKinematicTranslationCharacterControllerPlugin {
 pub struct PhysXDynamicImpulseCharacterControllerPlugin;
 
 impl Plugin for PhysXDynamicImpulseCharacterControllerPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_system(create_mass.system())
             .add_system(constrain_rotation.system())
             .add_system_to_stage(CoreStage::PreUpdate, body_to_velocity.system())
@@ -34,7 +34,7 @@ impl Plugin for PhysXDynamicImpulseCharacterControllerPlugin {
 pub struct PhysXDynamicForceCharacterControllerPlugin;
 
 impl Plugin for PhysXDynamicForceCharacterControllerPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_system(create_mass.system())
             .add_system(constrain_rotation.system())
             .add_system_to_stage(CoreStage::PreUpdate, body_to_velocity.system())

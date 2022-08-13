@@ -7,15 +7,23 @@ license = "MIT"
 
 [features]
 default = []
-use_physx = [ "bevy_prototype_physx", "physx" ]
+# use_physx = [ "bevy_prototype_physx", "physx" ]
 use_rapier = [ "bevy_rapier3d" ]
 
 [dependencies]
-bevy = "0.5"
-bevy_prototype_physx = { git = "https://github.com/superdump/bevy_prototype_physx", optional = true }
-bevy_rapier3d = { version = "0.11", features = [ "parallel", "simd-stable" ], optional = true }
-physx = { git = "https://github.com/superdump/physx-rs", branch = "send-sync-and-locks", optional = true }
+bevy = "0.8"
+# bevy_prototype_physx = { git = "https://github.com/superdump/bevy_prototype_physx", optional = true }
+bevy_rapier3d = { version = "*", features = [ "parallel", "simd-stable" ], optional = true }
+# physx = { git = "https://github.com/superdump/physx-rs", branch = "send-sync-and-locks", optional = true }
 
 [dev-dependencies]
 clap = "2.33"
 rand = "0.8"
+
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
+
+
+[workspace]
+resolver = "2" # Important! wgpu/Bevy needs this!

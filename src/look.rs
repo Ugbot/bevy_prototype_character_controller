@@ -2,7 +2,7 @@
 use crate::events::{LookDeltaEvent, LookEvent, PitchEvent, YawEvent};
 use bevy::{input::mouse::MouseMotion, prelude::*};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Component)]
 pub struct LookDirection {
     pub forward: Vec3,
     pub right: Vec3,
@@ -19,12 +19,13 @@ impl Default for LookDirection {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Component)]
 pub struct LookEntity(pub Entity);
 
 pub fn forward_up(settings: Res<MouseSettings>, mut query: Query<&mut LookDirection>) {
     for mut look in query.iter_mut() {
-        let rotation = Quat::from_rotation_ypr(
+        let rotation = Quat::from_euler(
+            EulerRot::YXZ,
             settings.yaw_pitch_roll.x,
             settings.yaw_pitch_roll.y,
             settings.yaw_pitch_roll.z,
@@ -43,7 +44,7 @@ pub struct MouseSettings {
 impl Default for MouseSettings {
     fn default() -> Self {
         Self {
-            sensitivity: 0.01,
+            sensitivity: 0.003,
             yaw_pitch_roll: Vec3::ZERO,
         }
     }

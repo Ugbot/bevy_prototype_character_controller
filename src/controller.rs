@@ -9,13 +9,17 @@ use crate::{
         ForceEvent, ImpulseEvent, LookDeltaEvent, LookEvent, PitchEvent, TranslationEvent, YawEvent,
     },
     input_map::InputMap,
-    look::{forward_up, input_to_look, LookDirection, LookEntity, MouseSettings},
+    look::{forward_up, input_to_look, LookDirection, LookEntity, MouseSettings,},
 };
 use bevy::prelude::*;
 
+#[derive(Component)]
 pub struct BodyTag;
+#[derive(Component)]
 pub struct YawTag;
+#[derive(Component)]
 pub struct HeadTag;
+#[derive(Component)]
 pub struct CameraTag;
 
 pub struct CharacterControllerPlugin;
@@ -25,7 +29,7 @@ pub const INPUT_TO_LOOK_SYSTEM: &str = "input_to_look";
 pub const FORWARD_UP_SYSTEM: &str = "forward_up";
 
 impl Plugin for CharacterControllerPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_event::<PitchEvent>()
             .add_event::<YawEvent>()
             .add_event::<LookEvent>()
@@ -36,16 +40,15 @@ impl Plugin for CharacterControllerPlugin {
             .init_resource::<MouseSettings>()
             .add_system_to_stage(
                 CoreStage::PreUpdate,
-                input_to_events.system().label(INPUT_TO_EVENTS_SYSTEM),
+                input_to_events.label(INPUT_TO_EVENTS_SYSTEM),
             )
             .add_system_to_stage(
                 CoreStage::PreUpdate,
-                input_to_look.system().label(INPUT_TO_LOOK_SYSTEM),
+                input_to_look.label(INPUT_TO_LOOK_SYSTEM),
             )
             .add_system_to_stage(
                 CoreStage::PreUpdate,
                 forward_up
-                    .system()
                     .label(FORWARD_UP_SYSTEM)
                     .after(INPUT_TO_EVENTS_SYSTEM)
                     .after(INPUT_TO_LOOK_SYSTEM),
@@ -65,7 +68,7 @@ pub struct InputState {
     pub down: bool,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Component)]
 pub struct CharacterController {
     pub input_map: InputMap,
     pub fly: bool,
@@ -96,7 +99,7 @@ impl Default for CharacterController {
     }
 }
 
-#[derive(Debug)]
+#[derive(Component, Debug)]
 pub struct Mass {
     pub mass: f32,
 }
@@ -264,7 +267,11 @@ pub fn controller_to_pitch(
 ) {
     if let Some(pitch) = pitches.iter().next() {
         for mut transform in query.iter_mut() {
-            transform.rotation = Quat::from_rotation_ypr(0.0, **pitch, 0.0);
+            transform.rotation = Quat::from_euler(
+                EulerRot::YXZ,
+                0.0,
+                **pitch,
+                0.0);
         }
     }
 }

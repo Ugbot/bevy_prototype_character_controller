@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use std::ops::Deref;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Component)]
 pub struct LookDeltaEvent {
     rotation_delta: Vec3,
 }
@@ -22,7 +22,7 @@ impl Deref for LookDeltaEvent {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Component)]
 pub struct LookEvent {
     rotation: Vec3,
 }
@@ -41,7 +41,7 @@ impl Deref for LookEvent {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Component)]
 pub struct PitchEvent {
     pitch: f32,
 }
@@ -60,7 +60,7 @@ impl Deref for PitchEvent {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Component)]
 pub struct YawEvent {
     yaw: f32,
 }
@@ -79,7 +79,7 @@ impl Deref for YawEvent {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Component)]
 pub struct TranslationEvent {
     translation: Vec3,
 }
@@ -100,7 +100,7 @@ impl Deref for TranslationEvent {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Component)]
 pub struct ImpulseEvent {
     impulse: Vec3,
 }
@@ -119,7 +119,7 @@ impl Deref for ImpulseEvent {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Component)]
 pub struct ForceEvent {
     force: Vec3,
 }
